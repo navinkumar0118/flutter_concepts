@@ -11,6 +11,7 @@ class HomeViewModel extends ChangeNotifier {
   //add one element in List
   void createOneItem(String value) {
     namesList.add(value);
+    print(namesList.toString());
     notifyListeners();
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sample_app_flutter/class_6_provider/homeViewModel.dart';
+import 'package:sample_app_flutter/class_6_provider/home_view_model.dart';
 import 'package:sample_app_flutter/temp_widget.dart';
 
 class HomePage extends StatefulWidget {

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sample_app_flutter/class_6_provider/home_view_model.dart';
-
-import 'class_6_provider/homepage.dart';
+import 'package:sample_app_flutter/class_7/example_class_7.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
@@ -21,6 +20,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: HomePage());
+        home: ExampleClass7());
   }
 }

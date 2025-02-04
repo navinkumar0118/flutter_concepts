@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sample_app_flutter/class_6_provider/home_view_model.dart';
-import 'package:sample_app_flutter/class_7/example_class_7.dart';
+import 'package:sample_app_flutter/class_8_api_integration/api_home_view_model.dart';
+import 'package:sample_app_flutter/class_8_api_integration/api_ui_home_screen.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
-      create: (context) => HomeViewModel(), child: const MyApp()));
+      create: (context) => ApiHomeViewModel(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,6 +20,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: ExampleClass7());
+        home: ApiUiHomeScreen());
   }
 }

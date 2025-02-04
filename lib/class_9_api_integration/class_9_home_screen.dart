@@ -12,30 +12,46 @@ class Class9HomeScreen extends StatefulWidget {
 
 class _Class9HomeScreenState extends State<Class9HomeScreen> {
   late Class9HomeScreenViewModel viewModel;
+  late Future<List<AlbumDetail>> futureList;
 
   @override
   void initState() {
     viewModel = Provider.of<Class9HomeScreenViewModel>(context, listen: false);
     //API CALL TRIGGER
-    viewModel.getAlbumsListApi();
+    futureList = viewModel.getAlbumsListApi();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("API CALL SCREEN"),
+      ),
       body: Consumer<Class9HomeScreenViewModel>(
         builder: (context, viewModel, child) {
-          return ListView.builder(
-              itemCount: viewModel.albumsList.length,
-              itemBuilder: (context, index) {
-                return listTileWidget(viewModel.albumsList[index]);
-              });
+          return mainBuilder(viewModel);
         },
       ),
     );
   }
+
+  Widget mainBuilder(Class9HomeScreenViewModel viewModel) =>
+      FutureBuilder<List<AlbumDetail>>(
+          future: futureList,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  itemCount: viewModel.albumsList.length,
+                  itemBuilder: (context, index) {
+                    return listTileWidget(viewModel.albumsList[index]);
+                  });
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+
+            return const Center(child: CircularProgressIndicator());
+          });
 
   Widget listTileWidget(AlbumDetail albumDetail) => ListTile(
         leading: const Image(

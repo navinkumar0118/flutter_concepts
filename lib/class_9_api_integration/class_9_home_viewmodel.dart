@@ -11,13 +11,14 @@ class Class9HomeScreenViewModel extends ChangeNotifier {
   static const BASE_URL = 'https://jsonplaceholder.typicode.com/';
 
   //api call function
-  void getAlbumsListApi() async {
+  Future<List<AlbumDetail>> getAlbumsListApi() async {
     var response = await http.get(Uri.parse("${BASE_URL}albums"));
 
     if (response.statusCode == 200) {
       List<dynamic> rawJsonList = json.decode(response.body);
       albumsList =
           rawJsonList.map((item) => AlbumDetail.fromJson(item)).toList();
+      return albumsList;
       notifyListeners();
     } else {
       throw Exception('Failed to load album list');

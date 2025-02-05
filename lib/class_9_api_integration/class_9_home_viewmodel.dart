@@ -24,4 +24,21 @@ class Class9HomeScreenViewModel extends ChangeNotifier {
       throw Exception('Failed to load album list');
     }
   }
+
+  //PUT
+  Future<AlbumDetail> updateAlbumTitle(String title, String position) async {
+    var response = await http.put(
+      Uri.parse("${BASE_URL}albums/$position"),
+      body: json.encode(<String, String>{
+        'title': title,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      var jsonData = json.decode(response.body);
+      return AlbumDetail.fromJson(jsonData as Map<String, dynamic>);
+    } else {
+      throw Exception('Failed to load album list');
+    }
+  }
 }

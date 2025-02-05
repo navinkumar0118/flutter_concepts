@@ -13,6 +13,7 @@ class Class9HomeScreen extends StatefulWidget {
 class _Class9HomeScreenState extends State<Class9HomeScreen> {
   late Class9HomeScreenViewModel viewModel;
   late Future<List<AlbumDetail>> futureList;
+  late Future<AlbumDetail> futureAlbum;
 
   @override
   void initState() {
@@ -30,7 +31,19 @@ class _Class9HomeScreenState extends State<Class9HomeScreen> {
       ),
       body: Consumer<Class9HomeScreenViewModel>(
         builder: (context, viewModel, child) {
-          return mainBuilder(viewModel);
+          return Stack(
+            children: [
+              mainBuilder(viewModel),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: OutlinedButton(
+                    onPressed: () {
+                      viewModel.updateAlbumTitle("CRICKETRONICS", "1");
+                    },
+                    child: const Text('PUT OPERATION')),
+              ),
+            ],
+          );
         },
       ),
     );

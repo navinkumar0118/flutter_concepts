@@ -12,13 +12,12 @@ class Class10HomeScreen extends StatefulWidget {
 
 class _class10HomeScreenState extends State<Class10HomeScreen> {
   late Class10HomeViewModel viewModel;
-  late Future<List<ProductDetail>> futureList;
 
   @override
   void initState() {
     viewModel = Provider.of<Class10HomeViewModel>(context, listen: false);
     //API CALL TRIGGER
-    futureList = viewModel.getProductsApi();
+    viewModel.getProductsApi();
     super.initState();
   }
 
@@ -32,11 +31,14 @@ class _class10HomeScreenState extends State<Class10HomeScreen> {
         builder: (context, viewModel, child) {
           return Stack(
             children: [
-              mainBuilder(viewModel),
+              productsStreamBuilder(viewModel),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: OutlinedButton(
-                    onPressed: () {}, child: const Text('PUT OPERATION')),
+                    onPressed: () {
+                      viewModel.productSink.addError("API FAILED");
+                    },
+                    child: const Text('PUT OPERATION')),
               ),
             ],
           );
@@ -45,36 +47,47 @@ class _class10HomeScreenState extends State<Class10HomeScreen> {
     );
   }
 
-  Widget mainBuilder(Class10HomeViewModel viewModel) =>
-      FutureBuilder<List<ProductDetail>>(
-          future: futureList,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
+  Widget listTileWidget(ProductDetail productDetail) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListTile(
+          leading: Image(
+            image: NetworkImage(productDetail.image),
+          ),
+          title: Text(productDetail.title),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "RS : ${productDetail.price}",
+                style: TextStyle(fontSize: 24.0),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  //STREAM BUILDER
+  Widget productsStreamBuilder(viewModel) => StreamBuilder<List<ProductDetail>>(
+        stream: viewModel.productStream,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<ProductDetail>> snapShot) {
+          if (snapShot.hasData) {
+            if (snapShot.data != null) {
               return ListView.builder(
-                  itemCount: viewModel.productsList.length,
+                  itemCount: snapShot.data!.length,
                   itemBuilder: (context, index) {
-                    return listTileWidget(viewModel.productsList[index]);
+                    return listTileWidget(snapShot.data![index]);
                   });
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
             }
+          } else if (snapShot.hasError) {
+            return Text('Something went wrong');
+          }
 
+          if (snapShot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          });
+          }
 
-  Widget listTileWidget(ProductDetail productDetail) => ListTile(
-        leading: Image(
-          image: NetworkImage(productDetail.image),
-        ),
-        title: Text(productDetail.title),
-        subtitle: Column(
-          children: [
-            Text(productDetail.description),
-            Text(
-              productDetail.price.toString(),
-              style: TextStyle(fontSize: 24.0),
-            ),
-          ],
-        ),
+          return Container();
+        },
       );
 }
